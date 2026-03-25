@@ -1,59 +1,108 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-semibold">Мои состаноци</h2>
-                        <a href="{{ route('meetings.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            + Нов состанок
-                        </a>
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-3">
+        <div>
+            <h2 class="mb-1 fw-semibold"><i class="bi bi-calendar3 me-1"></i> Мои состаноци</h2>
+            <div class="text-muted">Преглед и управување со сите состаноци.</div>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{{ route('meetings.create') }}" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Нов состанок
+            </a>
+        </div>
+    </div>
+
+    @php
+        $activeScope = $scope ?? request('scope', 'all');
+    @endphp
+    <ul class="nav nav-pills mb-4">
+        <li class="nav-item">
+            <a class="nav-link @if($activeScope === 'all') active @endif" href="{{ route('meetings.index', ['scope' => 'all']) }}">Сите</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @if($activeScope === 'created') active @endif" href="{{ route('meetings.index', ['scope' => 'created']) }}">Креирани од мене</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @if($activeScope === 'participating') active @endif" href="{{ route('meetings.index', ['scope' => 'participating']) }}">Каде сум вклучен</a>
+        </li>
+    </ul>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            @if($meetings->count() === 0)
+                <div class="text-center py-5">
+                    <div class="mb-3">
+                        <i class="bi bi-calendar-x fs-1 text-muted"></i>
                     </div>
-
-                    @if(session('success'))
-                        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-                            {{ session('success') }}
-                        </div>
-                    @endif
-
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead>
+                    <h5 class="fw-semibold">Немате состаноци</h5>
+                    <p class="text-muted mb-4">Креирајте нов состанок за да започнете.</p>
+                    <a href="{{ route('meetings.create') }}" class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i> Креирај состанок
+                    </a>
+                </div>
+            @else
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead class="table-light">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Наслов</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Датум</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Статус</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Акции</th>
+                            <th>Наслов</th>
+                            <th>Датум</th>
+                            <th>Креирано од</th>
+                            <th>Статус</th>
+                            <th class="text-end"></th>
                         </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
+                        <tbody>
                         @foreach($meetings as $meeting)
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $meeting->title }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $meeting->start_time->format('d.m.Y H:i') }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                                    @if($meeting->status === 'completed') bg-green-100 text-green-800
-                                    @elseif($meeting->status === 'scheduled') bg-yellow-100 text-yellow-800
-                                    @else bg-gray-100 text-gray-800 @endif">
-                                    {{ $meeting->status }}
-                                </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <a href="{{ route('meetings.show', $meeting) }}" class="text-blue-600 hover:text-blue-900 mr-3">Преглед</a>
-                                    <a href="{{ route('meetings.edit', $meeting) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Уреди</a>
-                                    @if($meeting->latestMinutes)
-                                        <a href="{{ route('meetings.minutes.show', ['meeting' => $meeting, 'minutes' => $meeting->latestMinutes->id]) }}"
-                                           class="text-green-600 hover:text-green-900">Записник</a>
+                                <td class="fw-semibold">{{ $meeting->title }}</td>
+                                <td>
+                                    <div>{{ $meeting->start_time->format('d.m.Y H:i') }}</div>
+                                    @if($meeting->location)
+                                        <div class="small text-muted"><i class="bi bi-geo-alt"></i> {{ $meeting->location }}</div>
                                     @endif
+                                </td>
+                                <td>{{ $meeting->creator->name ?? 'Н/А' }}</td>
+                                <td>
+                                    @php
+                                        $badge = 'secondary';
+                                        if ($meeting->status === 'completed') $badge = 'success';
+                                        elseif ($meeting->status === 'scheduled') $badge = 'warning';
+
+                                        $statusLabel = config('meeting.status_labels.' . $meeting->status, $meeting->status);
+                                    @endphp
+                                    <span class="badge text-bg-{{ $badge }}">{{ $statusLabel }}</span>
+                                </td>
+                                <td class="text-end">
+                                    <div class="btn-group" role="group">
+                                        <a href="{{ route('meetings.show', $meeting) }}" class="btn btn-outline-primary btn-sm">
+                                            <i class="bi bi-eye"></i> Преглед
+                                        </a>
+
+                                        @if($meeting->created_by === auth()->id())
+                                            <a href="{{ route('meetings.edit', $meeting) }}" class="btn btn-outline-secondary btn-sm">
+                                                <i class="bi bi-pencil"></i> Уреди
+                                            </a>
+                                        @endif
+
+                                        @if($meeting->latestMinutes)
+                                            <a href="{{ route('meetings.minutes.index', $meeting) }}" class="btn btn-outline-success btn-sm">
+                                                <i class="bi bi-journal-text"></i> Записници
+                                            </a>
+                                        @endif
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
                         </tbody>
                     </table>
+
+                    <div class="mt-3">
+                        {{ $meetings->links() }}
+                    </div>
                 </div>
-            </div>
+            @endif
         </div>
     </div>
 @endsection

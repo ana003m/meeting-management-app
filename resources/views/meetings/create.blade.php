@@ -78,7 +78,6 @@
                             <p class="text-muted mb-0">Нема други регистрирани корисници. <a href="/register">Регистрирај нов</a></p>
                         @endif
                     </div>
-                    <small class="text-muted">Кликни на кутијата за да одбереш учесник (можеш да одбереш повеќе)</small>
                     @error('participants')
                     <div class="invalid-feedback d-block">{{ $message }}</div>
                     @enderror
@@ -91,14 +90,10 @@
     <textarea class="form-control @error('agenda_text') is-invalid @enderror"
               name="agenda_text"
               rows="6"
-              placeholder="Внесете ја агендата. Секоја нова точка во нов ред...
+              placeholder="Внесете ја агендата. Секоја нова точка во нов ред."
 
-                    Пример:
-                    1. Вовед и цели на проектот
-                    2. Технички детали - избор на технологии
-                    3. Поделба на задачи и рокови
-                    4. Следни чекори">{{ old('agenda_text') }}</textarea>
-                    <small class="text-muted">Внесете ја агендата, секоја точка во нов ред</small>
+                   >{{ old('agenda_text') }}</textarea>
+
                     @error('agenda_text')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -106,7 +101,7 @@
 
                 <div class="mt-4">
                     <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-save"></i> Креирај состанок
+                         Креирај состанок
                     </button>
                     <a href="{{ route('meetings.index') }}" class="btn btn-secondary">
                         <i class="bi bi-x"></i> Откажи

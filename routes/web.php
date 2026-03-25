@@ -29,5 +29,6 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('meetings', MeetingController::class);
     Route::post('/meetings/{meeting}/notes', [MeetingNoteController::class, 'store'])->name('meetings.notes.store');
     Route::post('/meetings/{meeting}/notes/{note}/generate', [MeetingNoteController::class, 'generate'])->name('meetings.notes.generate');
+    Route::get('/meetings/{meeting}/minutes', [MeetingController::class, 'minutesIndex'])->name('meetings.minutes.index');
     Route::get('/meetings/{meeting}/minutes/{minutes}', [MeetingController::class, 'showMinutes'])->name('meetings.minutes.show');
 });

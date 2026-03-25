@@ -57,3 +57,54 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+# Meeting Management App
+
+## Database (PostgreSQL)
+
+You **do not need Docker Compose** to use PostgreSQL.
+
+Docker is only an *optional convenience* to quickly run Postgres in an isolated container. If you already have Postgres installed locally (or prefer installing it natively), you can use that instead.
+
+### Option A: Install PostgreSQL natively (macOS)
+
+#### A1) Using Postgres.app (easiest)
+1. Install Postgres.app from https://postgresapp.com/
+2. Start Postgres.app (it runs a local PostgreSQL server)
+3. Ensure `psql` is available (Postgres.app can add it to your PATH)
+
+#### A2) Using Homebrew
+```bash
+brew install postgresql@16
+brew services start postgresql@16
+```
+
+### Configure `.env`
+Set these values:
+```dotenv
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=meeting_management
+DB_USERNAME=postgres
+DB_PASSWORD=postgres
+```
+
+### Create the database
+Run (adjust username/password if different):
+```bash
+createdb -h 127.0.0.1 -p 5432 -U postgres meeting_management
+```
+
+### Run migrations
+```bash
+php artisan config:clear
+php artisan migrate
+```
+
+### Option B (optional): Docker Compose
+If you *want* the containerized approach, use the provided `docker-compose.yml`:
+```bash
+docker compose up -d
+php artisan migrate
+```

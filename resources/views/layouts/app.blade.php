@@ -10,12 +10,19 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <style>
+        body { background: #f5f7fb; }
+    </style>
+
+    @stack('styles')
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4 shadow-sm">
     <div class="container">
         <a class="navbar-brand" href="{{ url('/') }}">
-            <i class="bi bi-calendar-check"></i> Meeting Manager
+            МоиСостаноци
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
@@ -31,11 +38,11 @@
                     </li>
                 @else
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
+                        <a class="nav-link" href="{{ route('dashboard') }}">Почетна</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('meetings.index') }}">
-                            <i class="bi bi-calendar"></i> Meetings
+                            Состаноци
                         </a>
                     </li>
                     <li class="nav-item dropdown">
@@ -79,5 +86,6 @@
 
 <!-- Bootstrap JS Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+@stack('scripts')
 </body>
-</html><?php
+</html>

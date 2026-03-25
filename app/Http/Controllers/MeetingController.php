@@ -13,15 +13,31 @@ class MeetingController extends Controller
 
     public function index()
     {
-        $meetings = Meeting::with(['creator', 'latestMinutes'])
-            ->where('created_by', auth()->id())
-            ->orWhereHas('participants', function($query) {
-                $query->where('user_id', auth()->id());
-            })
-            ->orderBy('start_time', 'desc')
-            ->paginate(10);
+        $userId = auth()->id();
+        $scope = request()->query('scope', 'all');
 
-        return view('meetings.index', compact('meetings'));
+        $query = Meeting::with(['creator', 'latestMinutes'])
+            ->orderBy('start_time', 'desc');
+
+        if ($scope === 'created') {
+            $query->where('created_by', $userId);
+        } elseif ($scope === 'participating') {
+            $query->whereHas('participants', function ($q) use ($userId) {
+                $q->where('user_id', $userId);
+            });
+        } else {
+            // all: created OR participating
+            $query->where(function ($q) use ($userId) {
+                $q->where('created_by', $userId)
+                    ->orWhereHas('participants', function ($qq) use ($userId) {
+                        $qq->where('user_id', $userId);
+                    });
+            });
+        }
+
+        $meetings = $query->paginate(10)->withQueryString();
+
+        return view('meetings.index', compact('meetings', 'scope'));
     }
 
     public function create()
@@ -102,6 +118,23 @@ class MeetingController extends Controller
         }
 
         return view('meetings.minutes', compact('meeting', 'minutes'));
+    }
+
+    /**
+     * List all minutes (записници) generated for a meeting.
+     */
+    public function minutesIndex(Meeting $meeting)
+    {
+        if ($meeting->created_by !== auth()->id() && !$meeting->participants->contains('id', auth()->id())) {
+            abort(403, 'Немате пристап до овој состанок.');
+        }
+
+        $minutes = $meeting->minutes()
+            ->with(['generator', 'sourceNote'])
+            ->orderByDesc('generated_at')
+            ->get();
+
+        return view('meetings.minutes-index', compact('meeting', 'minutes'));
     }
 
     public function edit(Meeting $meeting)
