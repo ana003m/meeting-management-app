@@ -1,110 +1,213 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <a href="https://laravel.com" target="_blank">
+    <img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo">
+  </a>
 </p>
 
-## About Laravel
+<p align="center">
+  <img src="https://img.shields.io/badge/PHP-8.2-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP">
+  <img src="https://img.shields.io/badge/Laravel-12-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" alt="Laravel">
+  <img src="https://img.shields.io/badge/PostgreSQL-17-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL">
+  <img src="https://img.shields.io/badge/OpenAI-API-412991?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI">
+  <img src="https://img.shields.io/badge/Bootstrap-5-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white" alt="Bootstrap">
+</p>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+# Управувач со состаноци (Meeting Manager)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Систем за закажување состаноци, агенди и водење записници со автоматско генерирање на резиме, акциони точки и одлуки преку **OpenAI**. Генерирањето се одвива во позадина (Laravel Queue), а записникот се испраќа по е-пошта до сите учесници.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## ✨ Функционалности
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- Креирање, уредување и бришење на состаноци
+- Додавање на агенда 
+-  Додавање на учесници
+-  Внесување на белешки по завршен состанок
+- Автоматско генерирање на записник (резиме, акциони точки, одлуки) со **OpenAI**
+-  Позадинска обработка (**Queue**) – корисникот не чека
+- Испраќање на записник по е-пошта до **сите учесници**
+- Автентикација (регистрација, најава, одјава)
+- Авторизација – само креаторот може да уредува/брише, учесниците можат да гледаат
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## 🛠 Технологии
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+| Компонента | Технологија                     |
+|------------|---------------------------------|
+| Backend | Laravel 12 (PHP 8.2)            |
+| База на податоци | PostgreSQL                      |
+| Frontend | Blade + Bootstrap 5             |
+| Автентикација | Laravel Breeze                  |
+| Вештачка интелигенција | OpenAI API (GPT-3.5-turbo)      |
+| Е-пошта | Gmail SMTP           |
+| Позадински задачи | Laravel Queue (database driver) |
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## 🗄 Структура на базата
 
-## Contributing
+| Табела | Опис |
+|--------|------|
+| `users` | Регистрирани корисници |
+| `meetings` | Состаноци (наслов, датум, време, локација, статус) |
+| `agendas` | Агенда точки за секој состанок |
+| `meeting_notes` | Белешки внесени од корисници |
+| `meeting_minutes` | Генерирани записници (резиме, акциони точки, одлуки) |
+| `participants` | Релација many-to-many помеѓу состаноци и корисници |
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## 🚀 Инсталација и стартување
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-
-# Meeting Management App
-
-## Database (PostgreSQL)
-
-You **do not need Docker Compose** to use PostgreSQL.
-
-Docker is only an *optional convenience* to quickly run Postgres in an isolated container. If you already have Postgres installed locally (or prefer installing it natively), you can use that instead.
-
-### Option A: Install PostgreSQL natively (macOS)
-
-#### A1) Using Postgres.app (easiest)
-1. Install Postgres.app from https://postgresapp.com/
-2. Start Postgres.app (it runs a local PostgreSQL server)
-3. Ensure `psql` is available (Postgres.app can add it to your PATH)
-
-#### A2) Using Homebrew
+### 1. Клонирај го репозиториумот
 ```bash
-brew install postgresql@16
-brew services start postgresql@16
+git clone https://github.com/ana003m/meeting-management-app.git
+cd meeting-management-app
 ```
 
-### Configure `.env`
-Set these values:
-```dotenv
+### 2. Инсталирај ги PHP зависностите
+```bash
+composer install
+```
+### 3. Постави ја конфигурацијата
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+### 4. Постави ја базата на податоци (PostgreSQL)
+Во .env постави ги:
+```text
 DB_CONNECTION=pgsql
 DB_HOST=127.0.0.1
 DB_PORT=5432
-DB_DATABASE=meeting_management
+DB_DATABASE=meeting_db
 DB_USERNAME=postgres
-DB_PASSWORD=postgres
+DB_PASSWORD=your_password
+```
+Креирај ја базата:
+```bash
+createdb -h 127.0.0.1 -p 5432 -U postgres meeting_db
 ```
 
-### Create the database
-Run (adjust username/password if different):
+### 5. Изврши ги миграциите
 ```bash
-createdb -h 127.0.0.1 -p 5432 -U postgres meeting_management
-```
-
-### Run migrations
-```bash
-php artisan config:clear
 php artisan migrate
 ```
 
-### Option B (optional): Docker Compose
-If you *want* the containerized approach, use the provided `docker-compose.yml`:
-```bash
-docker compose up -d
-php artisan migrate
+### 6. Постави го OpenAI API клучот
+Во .env додај:
+```text
+OPENAI_API_KEY=your-openai-api-key-here
 ```
+
+### 7. Постави ја е-поштата
+Во .env додај:
+```text
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=your-email@gmail.com
+MAIL_PASSWORD=your-app-password
+MAIL_ENCRYPTION=tls
+```
+### 8. Стартувај го серверот
+```bash
+php artisan serve
+```
+
+### 9. Стартувај го Queue worker (во посебен терминал)
+```bash
+php artisan queue:work
+```
+
+### 10. Отвори во прелистувач
+```bash
+http://127.0.0.1:8000
+```
+---
+### 🔐 Авторизација
+
+Правилата за пристап се дефинирани во `MeetingPolicy`:
+
+- **view** – сите учесници може да ги гледаат состаноците
+- **update / delete** – само креаторот може да направи измени или да избрише состанок
+
+---
+
+### 🤖 Како функционира OpenAI интеграцијата?
+
+1. Корисникот внесува белешки по завршен состанок
+2. Белешките се зачувуваат во база
+3. Се испраќа `GenerateMeetingMinutes` Job во Queue
+4. Queue worker го процесира Job-от:
+    - Го повикува **OpenAI API** со детален промпт
+    - Враќа **JSON** со `summary`, `action_items`, `decisions`
+    - Го зачувува записникот во `meeting_minutes`
+    - Испраќа е-пошта до **сите учесници**
+
+---
+
+### 📁 Структура на проектот (клучни фајлови)
+```text
+app/
+├── Http/Controllers/
+│ ├── MeetingController.php # CRUD за состаноци
+│ ├── MeetingNoteController.php # Внесување белешки, испраќање Job
+│ └── Auth/ # Автентикација
+├── Jobs/
+│ └── GenerateMeetingMinutes.php # Позадинска задача (OpenAI, е-пошта)
+├── Mail/
+│ └── MeetingMinutesMail.php # Дефиниција на е-пошта
+├── Models/
+│ ├── Meeting.php
+│ ├── Agenda.php
+│ ├── MeetingNote.php
+│ ├── MeetingMinute.php
+│ ├── Participant.php
+│ └── User.php
+└── Policies/
+└── MeetingPolicy.php # Правила за пристап
+```
+---
+### 🧪 Тестирање
+- Регистрирај се – /register
+- Креирај состанок – додај агенда и учесници
+- Внеси белешки по завршен состанок
+- Провери дали записникот се генерирал на страницата на состанокот
+- Провери дали е-поштата стигнала 
+---
+### 🔗 Рути
+URL	Опис
+
+| URL | Опис |
+|-----|------|
+| `/` | Пренасочување кон `/login` |
+| `/login` | Страница за најава |
+| `/register` | Страница за регистрација |
+| `/dashboard` | Контролна табла |
+| `/meetings` | Листа на сите состаноци |
+| `/meetings/create` | Креирање нов состанок |
+| `/meetings/{id}` | Преглед на состанок (агенда, белешки, записник) |
+| `/meetings/{id}/minutes` | Листа на сите генерирани записници за состанокот |
+| `/meetings/{id}/minutes/{minutes}` | Преглед на конкретен генериран записник |
+
+---
+
+### Изработено од:
+- **Ана Манасиева** (221200)
+- **Марија Прастова** (221093)
+
+---
+
+### 📄 Лиценца
+
+Проектот е наменет за образовни цели.
+
+---
+**Факултет:** Факултет за компјутерски науки и инженерство – Скопје
+
+**Курс:** Имплементација на системи со слободен и отворен код
+
