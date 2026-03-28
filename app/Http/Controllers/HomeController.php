@@ -17,7 +17,6 @@ class HomeController extends Controller
             $query->where('user_id', $userId);
         })->count();
 
-        // Total unique meetings the user can access (created OR participating)
         $totalMeetingsCount = Meeting::query()
             ->where('created_by', $userId)
             ->orWhereHas('participants', function ($query) use ($userId) {
@@ -25,7 +24,6 @@ class HomeController extends Controller
             })
             ->count();
 
-        // Keep existing breakdowns (based on meetings created by the user)
         $completedCount = Meeting::where('created_by', $userId)
             ->where('status', 'completed')
             ->count();

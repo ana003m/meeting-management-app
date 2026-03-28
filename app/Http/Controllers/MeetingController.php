@@ -120,9 +120,6 @@ class MeetingController extends Controller
         return view('meetings.minutes', compact('meeting', 'minutes'));
     }
 
-    /**
-     * List all minutes (записници) generated for a meeting.
-     */
     public function minutesIndex(Meeting $meeting)
     {
         if ($meeting->created_by !== auth()->id() && !$meeting->participants->contains('id', auth()->id())) {

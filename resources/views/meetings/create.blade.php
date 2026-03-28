@@ -143,7 +143,7 @@
                 }
             }
 
-            // Додај event listener кога страницата е вчитана
+
             document.addEventListener('DOMContentLoaded', function() {
                 const addBtn = document.getElementById('add-agenda-btn');
                 if (addBtn) {

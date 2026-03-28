@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('meeting_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained();
-            $table->longText('content'); // сировите белешки
+            $table->longText('content');
             $table->boolean('is_final')->default(false);
             $table->timestamps();
         });
